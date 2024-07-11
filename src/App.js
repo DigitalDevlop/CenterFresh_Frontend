@@ -141,7 +141,16 @@ function App() {
       return prizes[0];
     }
 
-    const totalChance = prizes.reduce(
+    if (
+      !TokenService.getUser()?.user?.darazWin &&
+      TokenService.getUser()?.user?.reloadWin > 0
+    ) {
+      var updatedPrizeList = prizes.filter((prize) => prize.id !== 6);
+    } else {
+      var updatedPrizeList = prizes;
+    }
+
+    const totalChance = updatedPrizeList.reduce(
       (acc, prize) => acc + parseFloat(prize.chance),
       0
     );
@@ -151,7 +160,7 @@ function App() {
 
     // Iterate through prizes to find the selected one
     let cumulativeChance = 0;
-    for (const prize of prizes) {
+    for (const prize of updatedPrizeList) {
       cumulativeChance += parseFloat(prize.chance);
       if (randomNum < cumulativeChance) {
         return prize;
@@ -275,7 +284,7 @@ function App() {
                       showCancelButton: true,
                       confirmButtonColor: "#3085d6",
                       cancelButtonColor: "#d33",
-                      confirmButtonText: "Yes, I don't want!"
+                      confirmButtonText: "Yes, I don't want!",
                     }).then((result) => {
                       if (result.isConfirmed) {
                         window.location.reload(false);
