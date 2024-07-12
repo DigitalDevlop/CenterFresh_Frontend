@@ -35,6 +35,8 @@ function App() {
 
   const [loading, setLoading] = useState(false);
 
+  const [prizeConfigurations, setPrizeConfigurations] = useState(null);
+
   const playSound = () => {
     if (audioRef.current) {
       audioRef.current.play().catch((error) => {
@@ -141,16 +143,31 @@ function App() {
       return prizes[0];
     }
 
-    if (
-      !TokenService.getUser()?.user?.darazWin &&
-      TokenService.getUser()?.user?.reloadWin > 0
-    ) {
-      var updatedPrizeList = prizes.filter((prize) => prize.id !== 6);
+    if (prizeConfigurations.reloadAmount < 100) {
+      var updatedPrizeList = prizes.filter((prize) => prize.id !== 4);
+
+      if (prizeConfigurations.reloadAmount < 50) {
+        var updatedPrizeList = updatedPrizeList.filter(
+          (prize) => prize.id !== 2
+        );
+      }
     } else {
       var updatedPrizeList = prizes;
     }
 
-    const totalChance = updatedPrizeList.reduce(
+    if (
+      (!TokenService.getUser()?.user?.darazWin &&
+        TokenService.getUser()?.user?.reloadWin > 0) ||
+      prizeConfigurations.darazVoucher <= 0
+    ) {
+      var newupdatedPrizeList = updatedPrizeList.filter(
+        (prize) => prize.id !== 6
+      );
+    } else {
+      var newupdatedPrizeList = updatedPrizeList;
+    }
+
+    const totalChance = newupdatedPrizeList.reduce(
       (acc, prize) => acc + parseFloat(prize.chance),
       0
     );
@@ -160,7 +177,7 @@ function App() {
 
     // Iterate through prizes to find the selected one
     let cumulativeChance = 0;
-    for (const prize of updatedPrizeList) {
+    for (const prize of newupdatedPrizeList) {
       cumulativeChance += parseFloat(prize.chance);
       if (randomNum < cumulativeChance) {
         return prize;
@@ -199,6 +216,7 @@ function App() {
 
   useEffect(() => {
     if (tokenMobile) {
+      getPrizeConfig();
       setOpenOTPModal(false);
       setOpenInstructionModal(true);
     } else {
@@ -206,6 +224,17 @@ function App() {
       setOpenInstructionModal(false);
     }
   }, [tokenMobile]);
+
+  const getPrizeConfig = async () => {
+    PlayerService.getPrizeConfig()
+      .then((res) => {
+        console.log(res.data[0]?.attributes);
+        setPrizeConfigurations(res?.data[0]?.attributes);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
 
   return (
     <div className="App">
