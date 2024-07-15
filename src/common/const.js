@@ -41,7 +41,7 @@ export const prizes = [
     price: "Rs.100 /= Reload",
     color: "orange",
     deg: "4120",
-    chance: "16%",
+    chance: "1%",
     won: true,
     category: 'RELOAD-100',
     msg: `Amazing! You've just won a Rs.100 /= Reload! Enjoy your reward!`,
