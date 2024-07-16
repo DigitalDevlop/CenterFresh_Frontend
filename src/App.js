@@ -134,6 +134,7 @@ function App() {
 
   function selectPrize() {
     // Calculate total chance percentage
+    var updatedPrizeList = prizes;
 
     if (
       TokenService.getUser()?.user?.darazWin ||
@@ -143,16 +144,12 @@ function App() {
       return prizes[0];
     }
 
-    if (prizeConfigurations.reloadAmount < 100) {
+    if (prizeConfigurations.reloadHundred <= 0) {
       var updatedPrizeList = prizes.filter((prize) => prize.id !== 4);
+    }
 
-      if (prizeConfigurations.reloadAmount < 50) {
-        var updatedPrizeList = updatedPrizeList.filter(
-          (prize) => prize.id !== 2
-        );
-      }
-    } else {
-      var updatedPrizeList = prizes;
+    if (prizeConfigurations.reloadFifty <= 0) {
+      var updatedPrizeList = updatedPrizeList.filter((prize) => prize.id !== 2);
     }
 
     if (
