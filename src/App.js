@@ -152,11 +152,11 @@ function App() {
       var updatedPrizeList = updatedPrizeList.filter((prize) => prize.id !== 2);
     }
 
-    if (
-      (!TokenService.getUser()?.user?.darazWin &&
-        TokenService.getUser()?.user?.reloadWin > 0) ||
-      prizeConfigurations.darazVoucher <= 0
-    ) {
+    if(TokenService.getUser()?.user?.reloadWin > 0) {
+      updatedPrizeList = updatedPrizeList.filter((prize) => prize.id !== 6);
+    }
+
+    if ((!TokenService.getUser()?.user?.darazWin && TokenService.getUser()?.user?.reloadWin > 0) || prizeConfigurations.darazVoucher <= 0) {
       var newupdatedPrizeList = updatedPrizeList.filter(
         (prize) => prize.id !== 6
       );
