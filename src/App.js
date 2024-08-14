@@ -80,6 +80,7 @@ function App() {
   const [openInstructionModal, setOpenInstructionModal] = useState(false);
   const [spinBtnAnimation, setSpinBtnAnimation] = useState(true);
   const [openWarnAttModal, setOpenWarnAttModal] = useState(false);
+  const [openNoPrizesButton, setOpenNoPrizesButton] = useState(false);
   const [openClaimMessageModal, setOpenClaimMessageModal] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -91,6 +92,16 @@ function App() {
       setOpenWarnAttModal(true);
       return;
     }
+
+    if (
+      TokenService.getUser()?.user?.darazWin ||
+      TokenService.getUser()?.user?.reloadWin >= 5 ||
+      TokenService.getUser()?.user?.weeklyWin >= 2
+    ) {
+      setOpenNoPrizesButton(true);
+      return;
+    }
+
     playSound();
     const prizeSelec = selectPrize();
     setSpinBtnAnimation(false);
@@ -152,11 +163,15 @@ function App() {
       var updatedPrizeList = updatedPrizeList.filter((prize) => prize.id !== 2);
     }
 
-    if(TokenService.getUser()?.user?.reloadWin > 0) {
+    if (TokenService.getUser()?.user?.reloadWin > 0) {
       updatedPrizeList = updatedPrizeList.filter((prize) => prize.id !== 6);
     }
 
-    if ((!TokenService.getUser()?.user?.darazWin && TokenService.getUser()?.user?.reloadWin > 0) || prizeConfigurations.darazVoucher <= 0) {
+    if (
+      (!TokenService.getUser()?.user?.darazWin &&
+        TokenService.getUser()?.user?.reloadWin > 0) ||
+      prizeConfigurations.darazVoucher <= 0
+    ) {
       var newupdatedPrizeList = updatedPrizeList.filter(
         (prize) => prize.id !== 6
       );
@@ -350,8 +365,18 @@ function App() {
       </div>
       <div>
         <WarnningAttemptsModal
+          title={"Attempts Exceeded!"}
+          description={`Oops! It looks like you've reached the maximum number of attempts
+              for today. Don't worry, come back for more chances to win amazing
+              prizes!`}
           open={openWarnAttModal}
           setOpen={(val) => setOpenWarnAttModal(val)}
+        />
+        <WarnningAttemptsModal
+          title={"Attempts Exceeded!"}
+          description={`Congratulations! You've successfully claimed all your prizes for this campaign. You've reached the maximum number of chances, but stay tuned for more exciting opportunities in the future!`}
+          open={openNoPrizesButton}
+          setOpen={(val) => setOpenNoPrizesButton(val)}
         />
       </div>
       <div>

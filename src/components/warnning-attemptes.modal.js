@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import TokenService from "../services/TokenService";
 
-function WarnningAttemptsModal({ open, setOpen }) {
+function WarnningAttemptsModal({ open, setOpen, title, description }) {
   const [mobileNumber, setMobileNumber] = useState("");
   const [errorMsg, setErrorMsg] = useState(null);
 
