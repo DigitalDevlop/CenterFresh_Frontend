@@ -46,7 +46,7 @@ function InstructionModal({ open, setOpen }) {
               3. Daraz Voucher: If you win a Rs.1000 Daraz voucher, a voucher
               code will be provided in the popup. Use this code to claim your
               voucher. Do not share this code with anyone & use it before 31st
-              September 2024.
+              October 2025.
             </div>
             <div className="pt-2">
               4. Mobile Reload (Rs.50 or Rs.100): If you win a mobile reload,
